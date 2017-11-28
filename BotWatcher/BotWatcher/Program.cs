@@ -1,20 +1,24 @@
-﻿using BotWatcher.Services;
+﻿using BotWatcher.Config;
+using BotWatcher.Services;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
-
 
 namespace BotWatcher
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
             => new Program().StartAsync().GetAwaiter().GetResult();
 
         public async Task StartAsync()
         {
-            var config = Configuration.Load();
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+
+            var config = Settings.Load();
 
             var services = new ServiceCollection()
                 .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig

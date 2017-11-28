@@ -1,18 +1,19 @@
-﻿using Discord;
+﻿using BotWatcher.Config;
+using Discord;
 using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 
 namespace BotWatcher.Services
 {
-    class StartupService
+    internal class StartupService
     {
         private readonly DiscordSocketClient _discord;
-        private readonly Configuration _config;
+        private readonly Settings _config;
 
         public StartupService(
             DiscordSocketClient discord,
-            Configuration config)
+            Settings config)
         {
             _config = config;
             _discord = discord;

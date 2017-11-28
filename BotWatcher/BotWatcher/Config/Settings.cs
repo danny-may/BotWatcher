@@ -1,19 +1,17 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
 
-namespace BotWatcher
+namespace BotWatcher.Config
 {
-    class Configuration
+    internal class Settings
     {
         private static string file = "./config.json";
 
         public string Token { get; set; } = "";
-        public Dictionary<ulong, ulong[]> Tracking { get; set; } = new Dictionary<ulong, ulong[]>();
+        public MonitorConfig[] Monitoring { get; set; } = new MonitorConfig[0];
 
         [JsonIgnore]
-        private static FileInfo FullPath => new FileInfo(Path.Combine(AppContext.BaseDirectory, file));
+        private static FileInfo FullPath => new FileInfo(file);
 
         private static void EnsureDirectory()
         {
@@ -21,15 +19,15 @@ namespace BotWatcher
                 Directory.CreateDirectory(FullPath.Directory.FullName);
         }
 
-        public static Configuration Load()
+        public static Settings Load()
         {
             EnsureDirectory();
             if (!File.Exists(FullPath.FullName))
-                Save(new Configuration());
-            return JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(FullPath.FullName));
+                Save(new Settings());
+            return JsonConvert.DeserializeObject<Settings>(File.ReadAllText(FullPath.FullName));
         }
 
-        private static void Save(Configuration config)
+        private static void Save(Settings config)
         {
             EnsureDirectory();
             File.WriteAllText(FullPath.FullName, JsonConvert.SerializeObject(config, Formatting.Indented));
